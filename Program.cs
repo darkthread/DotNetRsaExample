@@ -34,12 +34,10 @@ var fxRsaCrypto = new NetFxRsaCrypto();
 RunTest(fxRsaCrypto);
 var bcRsaCrypto = new BCRsaCrypto();
 RunTest(bcRsaCrypto);
-// cross check
-var bcRsaCryptoSameKey = new BCRsaCrypto()
-{
-    PubKey = fxRsaCrypto.PubKey,
-    PrivKey = fxRsaCrypto.PrivKey
-};
+
+// 使用既有 PubKey 及 PrivKey 建立 BouncyCastle 的 IRsaCrypto 實作
+var bcRsaCryptoSameKey = new BCRsaCrypto(fxRsaCrypto.PubKey, fxRsaCrypto.PrivKey);
+
 Print("交叉加解密", ConsoleColor.Magenta);
 string plainText = "由System.Security加密，BouncyCastle解密";
 Print($"明文: {plainText}");
@@ -50,6 +48,7 @@ Print("交叉簽章", ConsoleColor.Magenta);
 var sign = fxRsaCrypto.Sign(Encoding.UTF8.GetBytes(plainText));
 Print($"簽章: {Convert.ToBase64String(sign)}");
 Print($"驗證: {(bcRsaCryptoSameKey.Verify(Encoding.UTF8.GetBytes(plainText), sign) ? "PASS" : "FAIL")}");
+
 void Print(string msg, ConsoleColor color = ConsoleColor.White)
 {
     Console.ForegroundColor = color;

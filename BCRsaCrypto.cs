@@ -18,8 +18,8 @@ namespace DotNetRsaExample
 
         public string PubKey
         {
-            get { return _pubKey; }
-            set
+            get => _pubKey;
+            private set
             {
                 var pubKeyReader = new StringReader(value);
                 var pemReader = new PemReader(pubKeyReader);
@@ -30,8 +30,8 @@ namespace DotNetRsaExample
 
         public string PrivKey
         {
-            get { return _privKey; }
-            set
+            get => _privKey;
+            private set
             {
                 var privKeyReader = new StringReader(value);
                 var pemReader = new PemReader(privKeyReader);
@@ -46,6 +46,14 @@ namespace DotNetRsaExample
             HashAlgorithm = hashAlgorithm ?? HashAlgorithm;
             CipherSuite = cipherSuite ?? CipherSuite;
             (PubKey, PrivKey) = GenerateKeyPair();
+        }
+
+        public BCRsaCrypto(string pubKey, string privKey, string hashAlgorithm = null!, string cipherSuite = null!)
+        {
+            HashAlgorithm = hashAlgorithm ?? HashAlgorithm;
+            CipherSuite = cipherSuite ?? CipherSuite;
+            PubKey = pubKey;
+            PrivKey = privKey;
         }
 
         (string pubKey, string privKey) GenerateKeyPair()

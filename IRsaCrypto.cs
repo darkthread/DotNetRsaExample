@@ -2,8 +2,8 @@
 {
     public interface IRsaCrypto
     {
-        string PubKey { get; set; }
-        string PrivKey { get; set; }
+        string PubKey { get;  }
+        string PrivKey { get; }
         byte[] Encrypt(byte[] plainData);
         bool Verify(byte[] data, byte[] signature);
         byte[] Decrypt(byte[] cipherData);

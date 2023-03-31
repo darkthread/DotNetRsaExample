@@ -21,13 +21,13 @@ namespace DotNetRsaExample
         public string PubKey
         {
             get => RSAKeys.ExportPublicKey(CspFromPubKey);
-            set => _cspPubKey = RSAKeys.ImportPublicKey(value);
+            private set => _cspPubKey = RSAKeys.ImportPublicKey(value);
         }
 
         public string PrivKey
         {
             get => RSAKeys.ExportPrivateKey(CspFromPrivKey);
-            set => _cspPrivKey = RSAKeys.ImportPrivateKey(value);
+            private set => _cspPrivKey = RSAKeys.ImportPrivateKey(value);
         }
 
         public NetFxRsaCrypto(int? keySize = null, string hashAlgorithm = null!)
@@ -37,6 +37,14 @@ namespace DotNetRsaExample
             var csp = new RSACryptoServiceProvider(KeySize);
             _cspPubKey = _cspPrivKey = csp;
         }
+
+        public NetFxRsaCrypto(string pubKey, string privKey, string hashAlgorithm = null!)
+        {
+            HashAlgorithm = hashAlgorithm ?? HashAlgorithm;
+            PubKey = pubKey;
+            PrivKey = privKey;
+        }
+
 
         public byte[] Encrypt(byte[] plainData)
             => CspFromPubKey.Encrypt(plainData, false);
