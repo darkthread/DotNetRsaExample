@@ -35,19 +35,21 @@ RunTest(fxRsaCrypto);
 var bcRsaCrypto = new BCRsaCrypto();
 RunTest(bcRsaCrypto);
 
-// 使用既有 PubKey 及 PrivKey 建立 BouncyCastle 的 IRsaCrypto 實作
-var bcRsaCryptoSameKey = new BCRsaCrypto(fxRsaCrypto.PubKey, fxRsaCrypto.PrivKey);
+// 使用既有 PubKey 或 PrivKey 建立 BCRsaCrypto 的三種做法
+// 1. BCRsaCrypto.FromPubKey(pubKey)
+// 2. BCRsaCrypto.FromPrivKey(privKey)
+// 3. new BCRsaCrypto(pubKey, privKey)
 
 Print("交叉加解密", ConsoleColor.Magenta);
 string plainText = "由System.Security加密，BouncyCastle解密";
 Print($"明文: {plainText}");
 var enc = fxRsaCrypto.Encrypt(Encoding.UTF8.GetBytes(plainText));
 Print($"密文: {Convert.ToBase64String(enc)}");
-Print($"解密: {Encoding.UTF8.GetString(bcRsaCryptoSameKey.Decrypt(enc))}");
+Print($"解密: {Encoding.UTF8.GetString(BCRsaCrypto.FromPrivKey(fxRsaCrypto.PrivKey).Decrypt(enc))}");
 Print("交叉簽章", ConsoleColor.Magenta);
 var sign = fxRsaCrypto.Sign(Encoding.UTF8.GetBytes(plainText));
 Print($"簽章: {Convert.ToBase64String(sign)}");
-Print($"驗證: {(bcRsaCryptoSameKey.Verify(Encoding.UTF8.GetBytes(plainText), sign) ? "PASS" : "FAIL")}");
+Print($"驗證: {(BCRsaCrypto.FromPubKey(fxRsaCrypto.PubKey).Verify(Encoding.UTF8.GetBytes(plainText), sign) ? "PASS" : "FAIL")}");
 
 void Print(string msg, ConsoleColor color = ConsoleColor.White)
 {

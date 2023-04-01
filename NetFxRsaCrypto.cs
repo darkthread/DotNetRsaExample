@@ -41,9 +41,14 @@ namespace DotNetRsaExample
         public NetFxRsaCrypto(string pubKey, string privKey, string hashAlgorithm = null!)
         {
             HashAlgorithm = hashAlgorithm ?? HashAlgorithm;
-            PubKey = pubKey;
-            PrivKey = privKey;
+            if (!string.IsNullOrEmpty(pubKey)) PubKey = pubKey;
+            if (!string.IsNullOrEmpty(privKey)) PrivKey = privKey;
         }
+
+        public static NetFxRsaCrypto FromPubKey(string pubKey, string hashAlgorithm = null!) =>
+            new NetFxRsaCrypto(pubKey, null!, hashAlgorithm);
+        public static NetFxRsaCrypto FromPrivKey(string privKey, string hashAlgorithm = null!) =>
+            new NetFxRsaCrypto(null!, privKey, hashAlgorithm);
 
 
         public byte[] Encrypt(byte[] plainData)
